@@ -5,14 +5,6 @@ $db_user = "root";
 $db_pass = "";
 $db_name = "car_bazaar_db";
 
-// Initialize session with secure settings
-session_start([
-    'cookie_lifetime' => 86400,
-    'cookie_secure' => false,
-    'cookie_httponly' => true,
-    'use_strict_mode' => true
-]);
-
 // Database connection with error handling
 try {
     // First connect without database to create it if needed
