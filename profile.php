@@ -240,4 +240,160 @@ $stmt->close();
                             <div class="file-upload">
                                 <input type="file" id="profile_image" name="profile_image" class="file-upload-input" 
                                        accept="image/*" onchange="previewImage(this, 'profile-preview')">
-                                <label for="profile_image" class="
+                                <label for="profile_image" class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Choose Profile Image
+                                </label>
+                            </div>
+                            <img id="profile-preview" src="<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'images/default-avatar.jpg'; ?>" 
+                                 style="max-width: 150px; display: block; margin-top: 15px; border-radius: 8px;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" name="update_profile" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </section>
+                
+                <!-- My Cars Section (for sellers) -->
+                <?php if ($_SESSION['user_type'] == 'seller'): ?>
+                    <section id="my-cars" class="profile-section">
+                        <h3>My Cars</h3>
+                        <div class="cars-grid">
+                            <?php if (count($cars) > 0): ?>
+                                <?php foreach ($cars as $car): ?>
+                                    <div class="car-card">
+                                        <?php if ($car['is_sold']): ?>
+                                            <div class="sold-badge">SOLD</div>
+                                        <?php else: ?>
+                                            <div class="car-badge">MY CAR</div>
+                                        <?php endif; ?>
+                                        
+                                        <div class="car-image">
+                                            <img src="<?php echo htmlspecialchars($car['image_path']); ?>" alt="<?php echo htmlspecialchars($car['brand'] . ' ' . $car['model']); ?>">
+                                        </div>
+                                        
+                                        <div class="car-details">
+                                            <h3 class="car-title"><?php echo htmlspecialchars($car['brand'] . ' ' . $car['model']); ?></h3>
+                                            <div class="car-price">₹<?php echo number_format($car['price']); ?></div>
+                                            
+                                            <div class="car-specs">
+                                                <span class="car-spec"><i class="fas fa-calendar-alt"></i> <?php echo htmlspecialchars($car['year']); ?></span>
+                                                <span class="car-spec"><i class="fas fa-tachometer-alt"></i> <?php echo number_format($car['km_driven']); ?> km</span>
+                                                <span class="car-spec"><i class="fas fa-gas-pump"></i> <?php echo htmlspecialchars($car['fuel_type']); ?></span>
+                                                <span class="car-spec"><i class="fas fa-cog"></i> <?php echo htmlspecialchars($car['transmission']); ?></span>
+                                            </div>
+                                            
+                                            <div class="car-actions">
+                                                <a href="edit-car.php?id=<?php echo $car['id']; ?>" class="btn btn-outline">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="car-details.php?id=<?php echo $car['id']; ?>" class="btn btn-primary">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                                    <i class="fas fa-car" style="font-size: 60px; color: var(--light-gray); margin-bottom: 20px;"></i>
+                                    <h3 style="color: var(--gray);">You haven't listed any cars yet</h3>
+                                    <a href="add-car.php" class="btn btn-primary" style="margin-top: 20px;">
+                                        <i class="fas fa-plus"></i> Add Your First Car
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </section>
+                <?php endif; ?>
+                
+                <!-- Favorites Section -->
+                <section id="favorites" class="profile-section">
+                    <h3>Favorite Cars</h3>
+                    <div class="cars-grid">
+                        <?php if (count($favorites) > 0): ?>
+                            <?php foreach ($favorites as $car): ?>
+                                <div class="car-card">
+                                    <div class="car-badge">FAVORITE</div>
+                                    
+                                    <div class="car-image">
+                                        <img src="<?php echo htmlspecialchars($car['image_path']); ?>" alt="<?php echo htmlspecialchars($car['brand'] . ' ' . $car['model']); ?>">
+                                    </div>
+                                    
+                                    <div class="car-details">
+                                        <h3 class="car-title"><?php echo htmlspecialchars($car['brand'] . ' ' . $car['model']); ?></h3>
+                                        <div class="car-price">₹<?php echo number_format($car['price']); ?></div>
+                                        
+                                        <div class="car-specs">
+                                            <span class="car-spec"><i class="fas fa-calendar-alt"></i> <?php echo htmlspecialchars($car['year']); ?></span>
+                                            <span class="car-spec"><i class="fas fa-tachometer-alt"></i> <?php echo number_format($car['km_driven']); ?> km</span>
+                                            <span class="car-spec"><i class="fas fa-gas-pump"></i> <?php echo htmlspecialchars($car['fuel_type']); ?></span>
+                                            <span class="car-spec"><i class="fas fa-cog"></i> <?php echo htmlspecialchars($car['transmission']); ?></span>
+                                        </div>
+                                        
+                                        <div class="car-actions">
+                                            <form method="POST" action="favorites.php" style="display: inline;">
+                                                <input type="hidden" name="car_id" value="<?php echo $car['id']; ?>">
+                                                <button type="submit" name="toggle_favorite" class="favorite-btn active">
+                                                    <i class="fas fa-heart"></i>
+                                                </button>
+                                            </form>
+                                            <a href="car-details.php?id=<?php echo $car['id']; ?>" class="btn btn-primary">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                                <i class="fas fa-heart" style="font-size: 60px; color: var(--light-gray); margin-bottom: 20px;"></i>
+                                <h3 style="color: var(--gray);">You haven't added any favorites yet</h3>
+                                <p>Browse cars and click the heart icon to add them to your favorites</p>
+                                <a href="index.php" class="btn btn-primary" style="margin-top: 20px;">
+                                    <i class="fas fa-car"></i> Browse Cars
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </section>
+                
+                <!-- Change Password Section -->
+                <section id="change-password" class="profile-section">
+                    <h3>Change Password</h3>
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="current_password">Current Password</label>
+                            <input type="password" id="current_password" name="current_password" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new_password">New Password</label>
+                            <input type="password" id="new_password" name="new_password" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm New Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" name="change_password" class="btn btn-primary">
+                                <i class="fas fa-lock"></i> Change Password
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <?php include 'footer.php'; ?>
+
+    <script src="script.js"></script>
+</body>
+</html>
