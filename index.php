@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 require 'db-config.php';
 
@@ -7,7 +9,7 @@ $search_where = "WHERE c.is_sold = FALSE";
 $search_params = [];
 $param_types = "";
 
-if (isset($_GET['search']) {
+if (isset($_GET['search'])) {
     $search = trim($_GET['search']);
     $min_price = isset($_GET['min_price']) ? (int)$_GET['min_price'] : 0;
     $max_price = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 10000000;
